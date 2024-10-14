@@ -1,0 +1,57 @@
+palette:
+  - name: banner
+    foreground: black
+    background: light gray
+
+  - name: streak
+    foreground: black
+    background: dark red
+
+  - name: bg
+    foreground: black
+    background: dark blue
+
+palette:
+  - name: banner
+    foreground: ""
+    background: ""
+    mono: ""
+    foreground_high: "#ffa"
+    background_high: "#60d"
+
+  - name: streak
+    foreground: ""
+    background: ""
+    mono: ""
+    foreground_high: "g50"
+    background_high: "#60a"
+
+  - name: inside
+    foreground: ""
+    background: ""
+    mono: ""
+    foreground_high: "g38"
+    background_high: "#808"
+
+  - name: outside
+    foreground: ""
+    background: ""
+    mono: ""
+    foreground_high: "g27"
+    background_high: "#a06"
+
+  - name: bg
+    foreground: ""
+    background: ""
+    mono: ""
+    foreground_high: "g7"
+    background_high: "#d06"
+
+  - name: transparent
+    foreground: ""
+    background: ""
+    mono: ""
+    foreground_high: ""
+    background_high: ""
+
+
