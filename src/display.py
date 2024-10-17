@@ -1,6 +1,67 @@
+from abc import ABC, abstractmethod
+from typing import Dict, List, Optional, Tuple
+
 import urwid
 from urwid import Align
-from typing import List, Tuple, Dict
+
+
+class WidgetFactory(ABC):
+    """
+    Provides interface for all types of widgets in our app.
+    """
+
+    @abstractmethod
+    def create_widget(self):
+        """
+        Includes logic to create each child class.
+        """
+        pass
+
+
+class ButtonFactory(WidgetFactory):
+    """
+    Create a button, its label, and tie it to a callback function.
+    """
+
+    def create_widget(
+        self, label: str, on_press: Optional[callable], align: str = "center"
+    ):
+        """
+        Create a button with given label that executes on_press when pressed.
+        Args:
+            label (str): value to display on the button
+            on_press (callable): function to execute on press.
+            align (str): alignment on the screen.
+        """
+        return urwid.Button(label=label, on_press=on_press, align=align)
+
+
+class TextFactory(WidgetFactory):
+    def create_widget(style: str, text: str, align: str = "center"):
+        return urwid.Text(style, text, align)
+
+
+class SolidFillFactory:
+    def create_widget(
+        self,
+    ):
+        pass
+
+
+class GUICreator:
+    """
+    Class that actually creates the widget objects.
+    """
+
+    def __init__(self):
+        self.button_factory = ButtonFactory()
+        self.text_factory = TextFactory()
+        self.solidfill_factory = SolidFillFactory()
+
+    def create_button(
+        self, label: str = "", on_press: callable = None, align: str = "center"
+    ):
+        return self.button_factory.create_widget(label, on_press, align)
 
 
 class DisplayManager:
@@ -9,7 +70,7 @@ class DisplayManager:
     """
 
     def __init__(self):
-        pass
+        self.gui_creator = GUICreator()
 
     def exit(self, key: str) -> None:
         """
@@ -62,7 +123,7 @@ class DisplayManager:
         )
         streak = urwid.AttrMap(txt, "banner")
         pile = loop.widget.base_widget
-        button1 = urwid.Button("Feed", align=Align.CENTER)
+        button1 = self.gui_creator.create_button("Feed", align=Align.CENTER)
         streak2 = urwid.AttrMap(button1, "streak")
 
         for item in (outside, inside, streak, streak2):
