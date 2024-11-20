@@ -1,18 +1,5 @@
 palette:
   - name: banner
-    foreground: black
-    background: light gray
-
-  - name: streak
-    foreground: black
-    background: dark red
-
-  - name: bg
-    foreground: black
-    background: dark blue
-
-palette:
-  - name: banner
     foreground: ""
     background: ""
     mono: ""

@@ -1,17 +1,11 @@
-from src.display import DisplayManager
-import urwid
+from typing import Dict, List
+
 import yaml
 
-
-def exit_on_key(key: str) -> None:
-    """
-    Exits the application when certain keys are pressed.
-    """
-    if key in {"q", "Q"}:
-        raise urwid.ExitMainLoop()
+from src.display import HomePage
 
 
-def load_configs(filename: str = "config.yaml"):
+def load_configs(filename: str = "config.yaml") -> Dict[str, List]:
     """
     Load and return the user specific configs.
     """
@@ -21,8 +15,9 @@ def load_configs(filename: str = "config.yaml"):
 
 def main() -> None:
     configs = load_configs()
-    display = DisplayManager()
-    display.start(palette=configs["palette"])
+    display = HomePage()
+    print(configs, type(configs))
+    display.display(palette=configs["palette"])
 
 
 if __name__ == "__main__":

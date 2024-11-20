@@ -10,6 +10,7 @@ readme = "README.md"
 python = "^3.12"
 urwid = {extras = ["curses"], version = "^2.6.15"}
 pyyaml = "^6.0.2"
+pre-commit = "^4.0.1"
 
 
 [build-system]
