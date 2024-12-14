@@ -41,4 +41,5 @@ palette:
     foreground_high: ""
     background_high: ""
 
-
+keyindings:
+  - exit: ["q", "Q"]

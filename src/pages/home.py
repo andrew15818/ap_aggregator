@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import Dict, List, Tuple, Callable, Optional
+from typing import Callable, Dict, List, Optional, Tuple
 
 import urwid
+
 from .feed import FeedPage
 
 
@@ -20,7 +21,7 @@ class WidgetFactory(ABC):
 
 class ButtonFactory(WidgetFactory):
     """
-    Create a button, its label, and tie it to a callback function.
+    Create a button, its label, and tie it to a cletteallback function.
     """
 
     def create_widget(
@@ -101,32 +102,14 @@ class GUICreator:
         return self.text_factory.create_widget(style, text, align, attr)
 
 
-def change_screen(mainLoop: urwid.MainLoop, fn: Callable, *args, **kwargs):
-    """
-    Change the screen, usually after some event, e.g. button press.
-    Args:
-        mainLoop (urwid.MainLoop): main program loop. We merely adjust the main widget.
-        fn (Callable): function that renders the new page, should return a widget
-    Returns:
-        None
-    """
-
-    placeholder = urwid.SolidFill()
-
-    mainLoop.widget = urwid.urwid.AttrMap(placeholder, "bg")
-    mainLoop.widget.original_widget = mainLoop.widget = urwid.AttrMap(
-        fn(*args, **kwargs)
-    )
-
-
-class HomePage(urwid.WidgetWrap):
+class MenuPage(urwid.WidgetWrap):
     """
     Defines look of main screen, starts main loop.
     """
 
-    # TODO: Convert this class to WidgetWrap child
-    def __init__(self):
+    def __init__(self, go_to_feed: Callable):
         self.gui_creator = GUICreator()
+        self.go_to_feed = go_to_feed
 
     def exit(self, key: str) -> None:
         """
@@ -184,15 +167,52 @@ class HomePage(urwid.WidgetWrap):
         )
         pile = loop.widget.base_widget
         button1 = self.gui_creator.create_button(
-            "Feed",
-            align="center",
-            on_press=change_screen(loop, FeedPage().display, palette),
+            "Feed", align="center", on_press=self.go_to_feed()
         )
         for item in (outside, inside, txt, button1, inside, outside):
             try:
                 pile.contents.append((item, pile.options()))
-            except Exception as e:
-                print(e)
+            except Exception:
+                print(type(item))
                 continue
 
         loop.run()
+
+
+class ScreenManager:
+    """
+    Manages screen objects and transitions
+    """
+
+    def __init__(self):
+        self.screens = {
+            "menu": MenuPage(self.go_to_feed),
+            "feed": FeedPage(),
+        }
+        self.current_screen = self.screens["menu"]
+        self.loop = None
+
+    def go_to_feed(self):
+        self.current_screen = self.screens["feed"]
+
+        if self.loop:
+            self.loop.widget = self.current_screen
+
+    def go_to_home(self):
+        pass
+
+    def handle_input(self, key: str):
+        if key in ["q", "Q"]:
+            raise urwid.ExitMainLoop()
+        pass
+
+    def run(self, palette: list[dict[str, str]]) -> None:
+        """
+        Start the screen with proper widget initialization
+        """
+        self.loop = urwid.MainLoop(
+            self.current_screen,
+            unhandled_input=self.handle_input,
+        )
+        self.current_screen.display(palette=palette)
+        self.loop.run()

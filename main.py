@@ -2,7 +2,7 @@ from typing import Dict, List
 
 import yaml
 
-from src.display import HomePage
+from src.pages.home import ScreenManager
 
 
 def load_configs(filename: str = "config.yaml") -> Dict[str, List]:
@@ -15,9 +15,8 @@ def load_configs(filename: str = "config.yaml") -> Dict[str, List]:
 
 def main() -> None:
     configs = load_configs()
-    display = HomePage()
-    print(configs, type(configs))
-    display.display(palette=configs["palette"])
+    display = ScreenManager()
+    display.run(palette=configs["palette"])
 
 
 if __name__ == "__main__":
