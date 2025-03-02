@@ -1,7 +1,7 @@
 import requests  # type: ignore
 from bs4 import BeautifulSoup
 
-from src.scrapers.base import BaseScraper, BaseResponse, BaseResponses
+from src.scrapers.base import BaseScraper, BaseResponses, BaseResponse
 
 
 class PapersWithCodeScraper(BaseScraper):
@@ -18,19 +18,26 @@ class PapersWithCodeScraper(BaseScraper):
         Scrape and format the response from PapersWithCode HTML.
         """
         try:
+            responses = []
             papers_html = self.html.find(class_="home-page").find_all(
                 class_="item-content"
             )
             for paper in papers_html:
+                # print(paper)
                 title_info = paper.find("h1").find("a")
                 title = title_info.contents[0]
                 link = (
                     self.url + title_info["href"]
                 )  # Only link relative to homepage is returned
-                print(f"Title: {title}, link: {link}")
+                abstract = paper.find(class_="item-strip-abstract").contents[0]
+                responses.append(
+                    BaseResponse(
+                        title=title, content=abstract, authors=["Me:D"], link=link
+                    )
+                )
+                print(f"Title: {title}, link: {link}, abstract: {abstract}")
 
-                break
-            return BaseResponses([BaseResponse()])
+            return BaseResponses(contents=[BaseResponse()])
         except Exception as e:
             raise Exception(f"Could not parse PapersWithCode with error {e}")
 
