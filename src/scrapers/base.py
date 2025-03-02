@@ -25,9 +25,9 @@ class BaseScraper(ABC):
     def __init__(self, url: str):
         self.url = url
 
-    def scrape(self):
+    def scrape(self) -> BaseResponses:
         """
         Scrape the website for relevant article links,
         return the properly formatted data for the feed parser.
         """
-        pass
+        return BaseResponses(contents=[BaseResponse()])
