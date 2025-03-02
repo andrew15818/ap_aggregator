@@ -12,6 +12,10 @@ urwid = {extras = ["curses"], version = "^2.6.15"}
 pyyaml = "^6.0.2"
 pre-commit = "^4.0.1"
 mypy = "^1.13.0"
+bs4 = "^0.0.2"
+requests = "^2.32.3"
+types-requests = "^2.32.0.20241016"
+pydantic = "^2.10.6"
 
 
 [build-system]
