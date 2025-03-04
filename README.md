@@ -1,8 +1,8 @@
 # Terminal-based feed parser
-The purpose of this app is to condense various feeds I usually parse into a single terminal application, 
-mostly for my own convenience. 
-This app is built on the [urwid](https://urwid.org/index.html) library for Python, which is a wrapper over the ncurses 
+The purpose of this app is to condense various interesting feeds into a single terminal app.
+Made mostly for my own convenience.
+This app is built on the [urwid](https://urwid.org/index.html) library for Python, which is a wrapper over the ncurses
 library for terminal applications in Linux.
 
+Currently I'm working on scraping the front page of [Papers with Code](https://paperswithcode.com/), as well as  adding support for X feeds.
 Author: Andres ponce
-
