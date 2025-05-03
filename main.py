@@ -2,7 +2,7 @@ from typing import Dict, List
 
 import yaml
 
-from src.pages.home import ScreenManager
+from src.pages.home_page import ScreenManager
 
 
 def load_configs(filename: str = "config.yaml") -> Dict[str, List]:
