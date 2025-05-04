@@ -1,6 +1,6 @@
 import urwid
 
-from src.scrapers.base import BaseResponses, BaseResponse
+from src.scrapers.base import BaseResponse
 from src.feed import Feed
 
 
@@ -11,12 +11,20 @@ class FeedListItem:
 
     def __init__(self, response: BaseResponse) -> None:
         self.response = response
-        print(self.response)
 
-    def as_widget(self) -> list[urwid.Text]:
-        print(self.response.get_items())
+    def as_widget(self) -> urwid.Pile:
+        """
+        Display each item as some text columns and separators
+        """
 
-        return [urwid.Text(t) for t in self.response.get_items()]
+        columns = urwid.Columns(
+            [
+                urwid.Text(self.response.title),
+                urwid.Text(self.response.link),
+                urwid.Text(", ".join(self.response.authors)),
+            ]
+        )
+        return urwid.Pile([urwid.AttrMap(urwid.Divider("-"), "bold"), columns])
 
 
 class FeedListBox(urwid.ListBox):
@@ -28,8 +36,8 @@ class FeedListBox(urwid.ListBox):
         # TODO: Update to display the actual fetched items.
         self.feed_items = self._get_feed_items()
         self.listbox = urwid.ListBox(
-            urwid.SimpleListWalker(
-                urwid.Columns(FeedListItem(w).as_widget()) for w in self.feed_items
+            urwid.SimpleFocusListWalker(
+                FeedListItem(w).as_widget() for w in self.feed_items
             )
         )
         self.main = urwid.Frame(self.listbox)
@@ -39,13 +47,12 @@ class FeedListBox(urwid.ListBox):
         self.loop.run()
         pass
 
-    def _get_feed_items(self) -> BaseResponses:
+    def _get_feed_items(self) -> list[BaseResponse]:
         """
         Initialize the feed object and query the items
         """
         self.feed = Feed()
         ret = self.feed.init_scrapers()
-        print(ret)
         return ret
 
 
