@@ -5,7 +5,7 @@ from src.scrapers.base import BaseScraper, BaseResponses, BaseResponse
 
 
 class PapersWithCodeScraper(BaseScraper):
-    def __init__(self, url: str):
+    def __init__(self, url: str = "https://www.paperswithcode.com"):
         super(PapersWithCodeScraper, self).__init__(url)
         self.url = url
         self.html = BeautifulSoup(
@@ -35,9 +35,8 @@ class PapersWithCodeScraper(BaseScraper):
                         title=title, content=abstract, authors=["Me:D"], link=link
                     )
                 )
-                print(f"Title: {title}, link: {link}, abstract: {abstract}")
 
-            return BaseResponses(contents=[BaseResponse()])
+            return BaseResponses(contents=responses)
         except Exception as e:
             raise Exception(f"Could not parse PapersWithCode with error {e}")
 
