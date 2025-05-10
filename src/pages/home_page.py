@@ -4,6 +4,7 @@ from typing import Callable, Dict, List, Optional, Tuple
 import urwid
 
 from src.pages.feed_page import FeedPage
+from src.pages.base import BasePage
 
 
 class WidgetFactory(ABC):
@@ -102,7 +103,7 @@ class GUICreator:
         return self.text_factory.create_widget(style, text, align, attr)
 
 
-class MenuPage(urwid.WidgetWrap):
+class HomePage(urwid.WidgetWrap, BasePage):
     """
     Defines look of main screen, starts main loop.
     """
@@ -187,7 +188,7 @@ class ScreenManager:
 
     def __init__(self):
         self.screens = {
-            "menu": MenuPage(None),  # self.go_to_feed),
+            "menu": HomePage(None),  # self.go_to_feed),
             "feed": FeedPage(),
         }
         self.current_screen = self.screens["menu"]
