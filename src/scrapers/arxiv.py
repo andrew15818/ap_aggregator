@@ -37,7 +37,7 @@ class ArxivScraper(BaseScraper):
                 link=item["link"],
                 authors=[n["name"] for n in item.authors],
             )
-            print(response.title)
+            # print(response.title)
             responses.append(response)
 
         return BaseResponses(contents=responses)
