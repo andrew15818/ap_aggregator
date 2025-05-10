@@ -51,16 +51,20 @@ class FeedListBox(urwid.ListBox):
                 ("weight", 1, self.listbox),
             ]
         )
-        # TODO: Get rid of this for real testing
-        self.loop = urwid.MainLoop(self.main, None)
+
+        self.loop = urwid.MainLoop(self.main, None, unhandled_input=self.keypress)
         self.loop.run()
-        pass
+
+    def keypress(self, key: str) -> None:
+        print(f"Receiving {key}")
+        if key in {"q", "Q"}:
+            raise urwid.ExitMainLoop()
 
     def create_column_header(self) -> urwid.Columns:
         columns = [
-            ("fixed", 8, urwid.AttrMap(urwid.Text("Title"), "header_label")),
-            ("fixed", 8, urwid.AttrMap(urwid.Text("Link"), "header_label")),
-            ("weight", 1, urwid.AttrMap(urwid.Text("Authors"), "header")),
+            urwid.AttrMap(urwid.Text("Title"), "header_label"),
+            urwid.AttrMap(urwid.Text("Link"), "header_label"),
+            urwid.AttrMap(urwid.Text("Authors"), "header"),
         ]
 
         return urwid.Columns(columns)
