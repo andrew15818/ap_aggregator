@@ -28,7 +28,7 @@ class FeedListItem:
         return urwid.Pile([columns, urwid.AttrMap(urwid.Divider("-"), "bold")])
 
 
-class FeedPage(urwid.ListBox, BasePage):
+class FeedPage(urwid.WidgetWrap, BasePage):
     """
     Queries the feed items and displays them.
     """
@@ -47,7 +47,7 @@ class FeedPage(urwid.ListBox, BasePage):
             )
         )
         self.header = self.create_column_header()
-        self.main = urwid.Pile(
+        self.main_widget = urwid.Pile(
             [
                 ("pack", self.header),
                 ("pack", urwid.Divider("+")),
@@ -55,8 +55,18 @@ class FeedPage(urwid.ListBox, BasePage):
             ]
         )
 
-        self.loop = urwid.MainLoop(self.main, None, unhandled_input=self.keypress)
+        super().__init__(urwid.AttrMap(self.main_widget, "foreground"))
+
+        self.loop = urwid.MainLoop(
+            self.main_widget, None, unhandled_input=self.keypress
+        )
         self.loop.run()
+
+    def get_widget(self) -> urwid.Widget:
+        """
+        Get the main widget for changing screen.
+        """
+        return self.main_widget
 
     def keypress(self, key: str) -> None:
         if key in {"q", "Q"}:
