@@ -3,7 +3,6 @@ from typing import Callable, Dict, List, Optional, Tuple
 
 import urwid
 
-from src.pages.feed_page import FeedPage
 from src.pages.base import BasePage
 
 
@@ -103,15 +102,13 @@ class GUICreator:
         return self.text_factory.create_widget(style, text, align, attr)
 
 
-class HomePage(urwid.WidgetWrap, BasePage):
+class HomePage(BasePage, urwid.WidgetWrap):
     """
     Defines look of main screen, starts main loop.
     """
 
     def __init__(self, go_to_feed: Callable):
         super().__init__(urwid.SolidFill())
-        self.gui_creator = GUICreator()
-        self.go_to_feed = go_to_feed
 
     def exit(self, key: str) -> None:
         """
@@ -150,73 +147,5 @@ class HomePage(urwid.WidgetWrap, BasePage):
         """
         Starts main loop and displays initial splash screen.
         """
-        _palette = self._format_palette(palette)
-        placeholder = urwid.SolidFill()
-
-        loop = urwid.MainLoop(placeholder, _palette, unhandled_input=self.exit)
-        loop.screen.set_terminal_properties(colors=256)
-        loop.widget = urwid.AttrMap(placeholder, "bg")
-        loop.widget.original_widget = urwid.Filler(urwid.Pile([]))
-
-        div = urwid.Divider()
-        outside = urwid.AttrMap(div, "outside")
-        inside = urwid.AttrMap(div, "inside ")
-        txt = self.gui_creator.create_text(
-            style="banner",
-            text="Andres Ponce's everything scraper",
-            align="center",
-            attr="banner",
-        )
-        pile = loop.widget.base_widget
-        button1 = self.gui_creator.create_button(
-            "Feed", align="center", on_press=self.go_to_feed
-        )
-        for item in (outside, inside, txt, button1, inside, outside):
-            try:
-                pile.contents.append((item, pile.options()))
-            except Exception:
-                print(f"Could not append: {type(item)}")
-                continue
-
-        loop.run()
-
-
-class ScreenManager:
-    """
-    Manages screen objects and transitions
-    """
-
-    def __init__(self):
-        self.screens = {
-            "menu": HomePage(None),  # self.go_to_feed),
-            "feed": FeedPage(),
-        }
-        self.current_screen = self.screens["menu"]
-        self.loop = None
-
-    def go_to_feed(self):
-        # TODO: How to change the screen?
-        self.current_screen = self.screens["feed"]
-        self.current_screen.display()
-
-        if self.loop:
-            self.loop.widget = self.current_screen.main_widget
-
-    def go_to_home(self):
+        # TODO: Rewrite the function while declaring a main widget
         pass
-
-    def handle_input(self, key: str):
-        if key in ["q", "Q"]:
-            raise urwid.ExitMainLoop()
-        pass
-
-    def run(self, palette: list[dict[str, str]]) -> None:
-        """
-        Start the screen with proper widget initialization
-        """
-        self.loop = urwid.MainLoop(
-            self.current_screen,
-            unhandled_input=self.handle_input,
-        )
-        self.current_screen.display(palette=palette)
-        self.loop.run()
